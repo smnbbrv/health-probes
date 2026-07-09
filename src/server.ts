@@ -10,6 +10,26 @@ import type { HealthServerOptions, ProbePaths } from './types.js';
 export class HealthServer {
   private instance: Server | null = null;
 
+  private async handleRequest(pathname: string, paths: Required<ProbePaths>): Promise<Response> {
+    switch (pathname) {
+      case paths.live: {
+        return probes.live.response();
+      }
+      case paths.startup: {
+        return probes.startup.response();
+      }
+      case paths.ready: {
+        return probes.ready.response();
+      }
+      case paths.health: {
+        return probes.health.response();
+      }
+      default: {
+        return new Response('Not Found', { status: 404 });
+      }
+    }
+  }
+
   /**
    * Start the health check HTTP server.
    */
@@ -67,21 +87,6 @@ export class HealthServer {
         }
       });
     });
-  }
-
-  private async handleRequest(pathname: string, paths: Required<ProbePaths>): Promise<Response> {
-    switch (pathname) {
-      case paths.live:
-        return probes.live.response();
-      case paths.startup:
-        return probes.startup.response();
-      case paths.ready:
-        return probes.ready.response();
-      case paths.health:
-        return probes.health.response();
-      default:
-        return new Response('Not Found', { status: 404 });
-    }
   }
 }
 

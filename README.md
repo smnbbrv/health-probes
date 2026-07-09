@@ -5,13 +5,13 @@ Health check probes for Node.js. Provides liveness, readiness, startup, and heal
 ## Installation
 
 ```bash
-npm install health-probes
+npm install @entwico/health-probes
 ```
 
 ## Usage
 
 ```ts
-import { checks, probes, server } from 'health-probes';
+import { checks, probes, server } from '@entwico/health-probes';
 
 // start health server on a separate port
 // default host is '127.0.0.1' for security reasons
@@ -114,7 +114,7 @@ Status values:
 Register health checks to verify dependencies are working:
 
 ```ts
-import { checks } from 'health-probes';
+import { checks } from '@entwico/health-probes';
 
 // return result (recommended for boolean checks)
 checks.register('database', () => ({
@@ -179,7 +179,7 @@ This means `server.start()` with no arguments will pick up `HEALTH_HOST` / `HEAL
 By default, endpoints use Kubernetes-style paths (`/livez`, `/readyz`, `/startupz`, `/healthz`). You can customize them:
 
 ```ts
-import { SimplePaths } from 'health-probes';
+import { SimplePaths } from '@entwico/health-probes';
 
 // use simple paths: /live, /ready, /startup, /health
 server.start({ paths: SimplePaths });
@@ -235,7 +235,7 @@ spec:
 ### Server
 
 ```ts
-import { server } from 'health-probes';
+import { server } from '@entwico/health-probes';
 
 server.start(options?: HealthServerOptions): void;
 server.stop(): Promise<void>;
@@ -244,7 +244,7 @@ server.stop(): Promise<void>;
 ### Probes
 
 ```ts
-import { probes } from 'health-probes';
+import { probes } from '@entwico/health-probes';
 
 probes.live.enable(): void;
 probes.live.disable(): void;
@@ -260,7 +260,7 @@ probes.health.response(): Promise<Response>;
 ### Checks
 
 ```ts
-import { checks } from 'health-probes';
+import { checks } from '@entwico/health-probes';
 
 checks.register(name: string, check: CheckFn): () => void;
 checks.register(check: HealthCheck): () => void;

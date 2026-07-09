@@ -11,13 +11,6 @@ export class HealthProbes {
     ready: false,
   };
 
-  private createProbeResponse(result: HealthProbeResult): Response {
-    return new Response(result.passing ? 'OK' : 'Service Unavailable', {
-      status: result.passing ? 200 : 503,
-      headers: { 'Content-Type': 'text/plain' },
-    });
-  }
-
   readonly live: HealthProbe = {
     enable: () => {
       this.state.live = true;
@@ -25,8 +18,8 @@ export class HealthProbes {
     disable: () => {
       this.state.live = false;
     },
-    get: async (): Promise<HealthProbeResult> => {
-      return { passing: this.state.live };
+    get: (): Promise<HealthProbeResult> => {
+      return Promise.resolve({ passing: this.state.live });
     },
     response: async (): Promise<Response> => {
       return this.createProbeResponse(await this.live.get());
@@ -40,8 +33,8 @@ export class HealthProbes {
     disable: () => {
       this.state.startup = false;
     },
-    get: async (): Promise<HealthProbeResult> => {
-      return { passing: this.state.startup };
+    get: (): Promise<HealthProbeResult> => {
+      return Promise.resolve({ passing: this.state.startup });
     },
     response: async (): Promise<Response> => {
       return this.createProbeResponse(await this.startup.get());
@@ -97,6 +90,13 @@ export class HealthProbes {
       });
     },
   };
+
+  private createProbeResponse(result: HealthProbeResult): Response {
+    return new Response(result.passing ? 'OK' : 'Service Unavailable', {
+      status: result.passing ? 200 : 503,
+      headers: { 'Content-Type': 'text/plain' },
+    });
+  }
 }
 
 export const probes = new HealthProbes();

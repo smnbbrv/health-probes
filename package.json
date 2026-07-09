@@ -1,5 +1,5 @@
 {
-  "name": "health-probes",
+  "name": "@entwico/health-probes",
   "version": "1.1.0",
   "description": "Kubernetes-style health check probes for Node.js — framework-agnostic /livez, /readyz, /startupz, and /healthz endpoints",
   "license": "MIT",
@@ -14,6 +14,7 @@
       "import": "./dist/index.js"
     }
   },
+  "packageManager": "pnpm@11.1.3",
   "files": [
     "dist",
     "README.md",
@@ -38,36 +39,26 @@
   "scripts": {
     "build": "tsc --project tsconfig.build.json",
     "clean": "rm -rf dist",
-    "prebuild": "npm run clean",
-    "prepublishOnly": "npm run build && npm run test && npm run lint",
-    "validate": "run-s lint typecheck test",
-    "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
+    "prebuild": "pnpm clean",
+    "prepublishOnly": "pnpm build",
+    "validate": "pnpm lint && pnpm typecheck && pnpm test",
+    "lint": "eslint --cache .",
+    "lint:fix": "pnpm lint --fix",
     "typecheck": "tsc",
-    "test": "npx tsx --test --experimental-test-coverage src/index.test.ts",
-    "prepare": "husky",
-    "semantic-release": "semantic-release"
+    "test": "tsx --test --experimental-test-coverage src/index.test.ts",
+    "ci:version": "changeset version && pnpm install --no-frozen-lockfile",
+    "ci:publish": "changeset publish"
   },
   "publishConfig": {
     "access": "public",
     "provenance": true
   },
   "devDependencies": {
-    "@commitlint/cli": "^20.4.1",
-    "@commitlint/config-conventional": "^20.4.1",
-    "@semantic-release/changelog": "^6.0.3",
-    "@semantic-release/git": "^10.0.1",
+    "@changesets/cli": "^2.31.0",
+    "@entwico/eslint-config": "^2.0.7",
     "@types/node": "^25.2.0",
-    "@typescript-eslint/eslint-plugin": "^8.54.0",
-    "eslint": "^9.39.2",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-import-resolver-typescript": "^4.4.4",
-    "eslint-plugin-import": "^2.32.0",
-    "eslint-plugin-prettier": "^5.5.5",
-    "husky": "^9.1.7",
-    "npm-run-all": "^4.1.5",
-    "semantic-release": "^25.0.3",
+    "eslint": "^10.6.0",
     "tsx": "^4.21.0",
-    "typescript": "^5.9.3",
-    "typescript-eslint": "^8.54.0"
+    "typescript": "^6.0.3"
   }
 }

@@ -9,29 +9,6 @@ export class HealthChecks {
   private readonly registered = new Map<string, HealthCheck>();
 
   /**
-   * Register a health check.
-   * Returns an unregister function.
-   */
-  register(name: string, check: () => Promise<HealthCheckResult | void> | HealthCheckResult | void): () => void;
-  register(check: HealthCheck): () => void;
-  register(
-    nameOrCheck: string | HealthCheck,
-    checkFn?: () => Promise<HealthCheckResult | void> | HealthCheckResult | void,
-  ): () => void {
-    const check: HealthCheck = typeof nameOrCheck === 'string' ? { name: nameOrCheck, check: checkFn! } : nameOrCheck;
-
-    if (this.registered.has(check.name)) {
-      console.warn(`[health] overwriting existing check "${check.name}"`);
-    }
-
-    this.registered.set(check.name, check);
-
-    return () => {
-      this.registered.delete(check.name);
-    };
-  }
-
-  /**
    * Run a single check with timeout.
    */
   private async run(check: HealthCheck): Promise<HealthCheckResult> {
@@ -62,11 +39,34 @@ export class HealthChecks {
   }
 
   /**
+   * Register a health check.
+   * Returns an unregister function.
+   */
+  register(name: string, check: () => Promise<HealthCheckResult | void> | HealthCheckResult | void): () => void;
+  register(check: HealthCheck): () => void;
+  register(
+    nameOrCheck: string | HealthCheck,
+    checkFn?: () => Promise<HealthCheckResult | void> | HealthCheckResult | void,
+  ): () => void {
+    const check: HealthCheck = typeof nameOrCheck === 'string' ? { name: nameOrCheck, check: checkFn! } : nameOrCheck;
+
+    if (this.registered.has(check.name)) {
+      console.warn(`[health] overwriting existing check "${check.name}"`);
+    }
+
+    this.registered.set(check.name, check);
+
+    return () => {
+      this.registered.delete(check.name);
+    };
+  }
+
+  /**
    * Run all registered health checks.
    */
   async runAll(): Promise<Record<string, HealthCheckResult>> {
     const results: Record<string, HealthCheckResult> = {};
-    const checks = [...this.registered.values()];
+    const checks = this.registered.values().toArray();
 
     const checkPromises = checks.map(async (check) => {
       const result = await this.run(check);
@@ -83,7 +83,10 @@ export class HealthChecks {
    * Run only required checks and return whether they all pass.
    */
   async runRequired(): Promise<boolean> {
-    const requiredChecks = [...this.registered.values()].filter((check) => !check.optional);
+    const requiredChecks = this.registered
+      .values()
+      .filter((check) => !check.optional)
+      .toArray();
 
     if (requiredChecks.length === 0) {
       return true;
@@ -104,7 +107,7 @@ export class HealthChecks {
    * Get all registered checks.
    */
   getChecks(): HealthCheck[] {
-    return [...this.registered.values()];
+    return this.registered.values().toArray();
   }
 }
 

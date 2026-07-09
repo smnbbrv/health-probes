@@ -166,29 +166,45 @@ describe('HealthProbes', () => {
   it('should start with all probes disabled', async () => {
     const hp = new HealthProbes();
 
-    assert.equal((await hp.live.get()).passing, false);
-    assert.equal((await hp.startup.get()).passing, false);
-    assert.equal((await hp.ready.get()).passing, false);
+    const live = await hp.live.get();
+    const startup = await hp.startup.get();
+    const ready = await hp.ready.get();
+
+    assert.equal(live.passing, false);
+    assert.equal(startup.passing, false);
+    assert.equal(ready.passing, false);
   });
 
   it('should enable and disable live', async () => {
     const hp = new HealthProbes();
 
     hp.live.enable();
-    assert.equal((await hp.live.get()).passing, true);
+
+    const enabled = await hp.live.get();
+
+    assert.equal(enabled.passing, true);
 
     hp.live.disable();
-    assert.equal((await hp.live.get()).passing, false);
+
+    const disabled = await hp.live.get();
+
+    assert.equal(disabled.passing, false);
   });
 
   it('should enable and disable startup', async () => {
     const hp = new HealthProbes();
 
     hp.startup.enable();
-    assert.equal((await hp.startup.get()).passing, true);
+
+    const enabled = await hp.startup.get();
+
+    assert.equal(enabled.passing, true);
 
     hp.startup.disable();
-    assert.equal((await hp.startup.get()).passing, false);
+
+    const disabled = await hp.startup.get();
+
+    assert.equal(disabled.passing, false);
   });
 
   it('should return 200 response when probe is enabled', async () => {
@@ -237,8 +253,8 @@ describe('HealthServer', () => {
   it('should start and stop without error', async () => {
     hs = new HealthServer();
 
-    hs.start({ port: 19091 });
-    await waitForPort(19091);
+    hs.start({ port: 19_091 });
+    await waitForPort(19_091);
     await hs.stop();
   });
 
@@ -251,9 +267,9 @@ describe('HealthServer', () => {
   it('should ignore duplicate start calls', async () => {
     hs = new HealthServer();
 
-    hs.start({ port: 19092 });
-    hs.start({ port: 19092 });
-    await waitForPort(19092);
+    hs.start({ port: 19_092 });
+    hs.start({ port: 19_092 });
+    await waitForPort(19_092);
   });
 
   it('should use HEALTH_PORT env var when no port option is given', async () => {
@@ -262,7 +278,7 @@ describe('HealthServer', () => {
 
     try {
       hs.start();
-      await waitForPort(19093);
+      await waitForPort(19_093);
     } finally {
       delete process.env['HEALTH_PORT'];
     }
@@ -273,8 +289,8 @@ describe('HealthServer', () => {
     hs = new HealthServer();
 
     try {
-      hs.start({ port: 19094 });
-      await waitForPort(19094);
+      hs.start({ port: 19_094 });
+      await waitForPort(19_094);
     } finally {
       delete process.env['HEALTH_PORT'];
     }

@@ -8,3 +8,4 @@
 !.vscode/extensions.json
 node_modules/
 /dist/
+.eslintcache
