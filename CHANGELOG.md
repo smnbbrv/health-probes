@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/entwico/health-probes/compare/v1.1.0...v1.1.1) (2026-04-17)
+
+
+### Bug Fixes
+
+* update license ([09b4be5](https://github.com/entwico/health-probes/commit/09b4be5c616d6abd7ada81de4f8d972fc0c56d64))
+
 # [1.1.0](https://github.com/smnbbrv/health-probes/compare/v1.0.0...v1.1.0) (2026-02-24)
 
 

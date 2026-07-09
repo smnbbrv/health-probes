@@ -1,6 +1,6 @@
 {
   "name": "@entwico/health-probes",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Kubernetes-style health check probes for Node.js — framework-agnostic /livez, /readyz, /startupz, and /healthz endpoints",
   "license": "MIT",
   "author": "admin@entwico.com",
